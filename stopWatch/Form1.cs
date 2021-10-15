@@ -21,6 +21,7 @@ namespace stopWatch
             InitializeComponent();
         }
 
+        //gittest
         private void startStopBtn_Click(object sender, EventArgs e)
         {
             //計測中かそうでないかでボタンの表示を変えるｓ
