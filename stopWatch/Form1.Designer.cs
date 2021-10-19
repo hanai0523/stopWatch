@@ -60,7 +60,7 @@
             // 
             this.timeLabel.AutoSize = true;
             this.timeLabel.Font = new System.Drawing.Font("MS UI Gothic", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.timeLabel.Location = new System.Drawing.Point(50, 40);
+            this.timeLabel.Location = new System.Drawing.Point(320, 30);
             this.timeLabel.Name = "timeLabel";
             this.timeLabel.Size = new System.Drawing.Size(192, 48);
             this.timeLabel.TabIndex = 3;
@@ -94,6 +94,7 @@
             this.Controls.Add(this.rapBtn);
             this.Name = "stopWacth";
             this.Text = "stopWacth";
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.stopWacth_Paint);
             this.ResumeLayout(false);
             this.PerformLayout();
 

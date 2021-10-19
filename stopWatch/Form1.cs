@@ -16,6 +16,7 @@ namespace stopWatch
         
         private Stopwatch _sw = new Stopwatch();
         
+
         public stopWacth()
         {
             InitializeComponent();
@@ -46,6 +47,40 @@ namespace stopWatch
         {
             timeLabel.Text = _sw.Elapsed.ToString();
 
+            Graphics g = this.CreateGraphics();
+            // penを作成
+            Pen blackPen = new Pen(Color.Black, 2);
+
+            //針の長さ
+            const int needleLength = 30;
+            const int start_x = 50;
+            const int start_y = 40;
+
+            const int angle_t = 360;
+            const int minute = 60000;
+
+            double angle_n = angle_t * _sw.ElapsedMilliseconds / minute;
+
+            //動いてない時は90度
+            if (_sw.IsRunning)
+            {
+                angle_n = 90;
+            }
+
+            // lineの始点と終点を設定
+            Point Start_point = new Point(start_x, start_y);
+            Point End_point
+                = new Point(start_x + needleLength * (int)(Math.Sin(angle_n) * 100) / 100
+                , start_y + needleLength * (int)(Math.Cos(angle_n) * 100) / 100);
+
+            // lineを描画
+            g.DrawLine(blackPen, Start_point, End_point);
+
+            // penを解放する
+            blackPen.Dispose();
+
+            // Graphicsを解放する
+            g.Dispose();
         }
 
         private void rapBtn_Click(object sender, EventArgs e)
@@ -66,6 +101,14 @@ namespace stopWatch
         private void labelLap_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void stopWacth_Paint(object sender, PaintEventArgs e)
+        {
+            // Graphicsオブジェクトの作成
+            //Graphics g = this.CreateGraphics();
+
+            
         }
     }
 }
