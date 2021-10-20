@@ -15,11 +15,13 @@ namespace stopWatch
     {
         
         private Stopwatch _sw = new Stopwatch();
-        
 
         public stopWacth()
         {
             InitializeComponent();
+            this.SetStyle(ControlStyles.DoubleBuffer, true);
+            this.SetStyle(ControlStyles.UserPaint, true);
+            this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
         }
 
         //gittest
@@ -45,42 +47,11 @@ namespace stopWatch
         //10ms間隔で更新
         private void timer_Tick(object sender, EventArgs e)
         {
-            timeLabel.Text = _sw.Elapsed.ToString();
-
-            Graphics g = this.CreateGraphics();
-            // penを作成
-            Pen blackPen = new Pen(Color.Black, 2);
-
-            //針の長さ
-            const int needleLength = 30;
-            const int start_x = 50;
-            const int start_y = 40;
-
-            const int angle_t = 360;
-            const int minute = 60000;
-
-            double angle_n = angle_t * _sw.ElapsedMilliseconds / minute;
-
-            //動いてない時は90度
-            if (_sw.IsRunning)
-            {
-                angle_n = 90;
-            }
-
-            // lineの始点と終点を設定
-            Point Start_point = new Point(start_x, start_y);
-            Point End_point
-                = new Point(start_x + needleLength * (int)(Math.Sin(angle_n) * 100) / 100
-                , start_y + needleLength * (int)(Math.Cos(angle_n) * 100) / 100);
-
-            // lineを描画
-            g.DrawLine(blackPen, Start_point, End_point);
-
-            // penを解放する
-            blackPen.Dispose();
-
-            // Graphicsを解放する
-            g.Dispose();
+            //時間描画
+            timeLabel.Text = _sw.Elapsed.ToString(@"hh\:mm\:ss\:fff");
+            this.Refresh();
+            //this.watch_pictureBox.Refresh();
+            
         }
 
         private void rapBtn_Click(object sender, EventArgs e)
@@ -94,7 +65,7 @@ namespace stopWatch
             else
             {
                 _sw.Reset();
-                labelLap.Text = "00:00:00";
+                labelLap.Text = "00:00:00:00";
             }
         }
 
@@ -106,9 +77,48 @@ namespace stopWatch
         private void stopWacth_Paint(object sender, PaintEventArgs e)
         {
             // Graphicsオブジェクトの作成
-            //Graphics g = this.CreateGraphics();
+            Graphics g = this.watch_pictureBox.CreateGraphics();
 
+            // penを作成
+            Pen redPen = new Pen(Color.Red, 2);
+
+
+            //針の長さ
+            float needleLength = this.watch_pictureBox.Height / 2 - 10;
+            float start_x = this.watch_pictureBox.Width / 2;
+            float start_y = this.watch_pictureBox.Height / 2;
+            const float angle_t = 360;
+            const float minute = 60000;
+
+            //動いてない時は90度
+            float angle_n = 90;
+            angle_n -= angle_t * _sw.ElapsedMilliseconds / minute;
+
+
+            // lineの始点と終点を設定
+            PointF Start_point = new PointF(start_x, start_y);
+            float goal_x = start_x + needleLength * (float)Math.Cos(angle_n * Math.PI / 180);
+            float goal_y = start_y - needleLength * (float)Math.Sin(angle_n * Math.PI / 180);
+            PointF End_point
+            = new PointF(goal_x, goal_y);
+
+
+            // lineを描画
+            g.DrawLine(redPen, Start_point, End_point);
+
+            // penを解放する
+            redPen.Dispose();
+
+            // Graphicsを解放する
+            g.Dispose();
+
+
+        }
+
+        private void watch_pictureBox_Paint(object sender, PaintEventArgs e)
+        {
             
         }
+        
     }
 }
