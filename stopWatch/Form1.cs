@@ -16,12 +16,19 @@ namespace stopWatch
         
         private Stopwatch _sw = new Stopwatch();
 
+        //ちらつき防止
+        Bitmap memoryImage;
+
+        bool visibleMemoryImage = false;
+
         public stopWacth()
         {
+
             InitializeComponent();
             this.SetStyle(ControlStyles.DoubleBuffer, true);
             this.SetStyle(ControlStyles.UserPaint, true);
             this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            timer.Enabled = true;
         }
 
         //gittest
@@ -44,14 +51,13 @@ namespace stopWatch
             
         }
 
-        //10ms間隔で更新
+        //1ms間隔で更新
         private void timer_Tick(object sender, EventArgs e)
         {
             //時間描画
             timeLabel.Text = _sw.Elapsed.ToString(@"hh\:mm\:ss\:fff");
-            this.Refresh();
-            //this.watch_pictureBox.Refresh();
-            
+            CaptureScreen();
+            this.watch_pictureBox.Invalidate();
         }
 
         private void rapBtn_Click(object sender, EventArgs e)
@@ -69,14 +75,9 @@ namespace stopWatch
             }
         }
 
-        private void labelLap_Click(object sender, EventArgs e)
-        {
 
-        }
-
-        private void stopWacth_Paint(object sender, PaintEventArgs e)
+        private void CaptureScreen()
         {
-            // Graphicsオブジェクトの作成
             Graphics g = this.watch_pictureBox.CreateGraphics();
 
             // penを作成
@@ -91,9 +92,7 @@ namespace stopWatch
             const float minute = 60000;
 
             //動いてない時は90度
-            float angle_n = 90;
-            angle_n -= angle_t * _sw.ElapsedMilliseconds / minute;
-
+            float angle_n = 90 - angle_t * _sw.ElapsedMilliseconds / minute;
 
             // lineの始点と終点を設定
             PointF Start_point = new PointF(start_x, start_y);
@@ -102,23 +101,33 @@ namespace stopWatch
             PointF End_point
             = new PointF(goal_x, goal_y);
 
-
             // lineを描画
             g.DrawLine(redPen, Start_point, End_point);
 
             // penを解放する
             redPen.Dispose();
 
+
+
+            //ピクセルをコピー
+            Graphics myGraphics = this.watch_pictureBox.CreateGraphics();
+            Size s = this.watch_pictureBox.Size;
+            memoryImage = new Bitmap(s.Width, s.Height, myGraphics);
+            Graphics memoryGraphics = Graphics.FromImage(memoryImage);
+            memoryGraphics.CopyFromScreen(this.watch_pictureBox.Location.X, this.watch_pictureBox.Location.Y, 0, 0, s);
+            
+
             // Graphicsを解放する
             g.Dispose();
-
-
+            visibleMemoryImage = true;
         }
+
 
         private void watch_pictureBox_Paint(object sender, PaintEventArgs e)
         {
-            
+            //画像描画
+            //if(visibleMemoryImage)e.Graphics.DrawImage(memoryImage, 0, 0);
         }
-        
+
     }
 }

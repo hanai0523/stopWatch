@@ -72,7 +72,6 @@
             // 
             // timer
             // 
-            this.timer.Enabled = true;
             this.timer.Interval = 1;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
@@ -85,7 +84,6 @@
             this.labelLap.Size = new System.Drawing.Size(192, 48);
             this.labelLap.TabIndex = 4;
             this.labelLap.Text = "00:00:00";
-            this.labelLap.Click += new System.EventHandler(this.labelLap_Click);
             // 
             // watch_pictureBox
             // 
@@ -112,7 +110,6 @@
             this.DoubleBuffered = true;
             this.Name = "stopWacth";
             this.Text = "stopWacth";
-            this.Paint += new System.Windows.Forms.PaintEventHandler(this.stopWacth_Paint);
             ((System.ComponentModel.ISupportInitialize)(this.watch_pictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
